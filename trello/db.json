@@ -1,0 +1,75 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "beca",
+      "email": "beca@gmail.com",
+      "password": "123456",
+      "token": "abc123"
+    },
+    {
+      "id": "2",
+      "name": "dev1",
+      "email": "dev1@gmail.com",
+      "password": "dev123",
+      "token": "def456"
+    },
+    {
+      "id": "3",
+      "name": "admin",
+      "email": "admin@gmail.com",
+      "password": "admin123",
+      "token": "vgkh286"
+    }
+  ],
+  "projects": [
+    {
+      "id": "3",
+      "name": "Project Gamma",
+      "date": "2023-10-03",
+      "owner": "2",
+      "description": "Project Gamma Desc."
+    },
+    {
+      "id": "08945f08-6dfd-4b83-90fb-35121c9ddbe7",
+      "name": "gvncnfx",
+      "owner": "1",
+      "date": "2025-06-06T21:01:36.434Z",
+      "description": "Hola Desc."
+    },
+    {
+      "id": "0de369c1-8eb8-41b3-9c19-4a6bce4c9353",
+      "name": "uhkgvn",
+      "owner": "1",
+      "date": "2025-06-06T21:19:31.130Z",
+      "description": "This is a sample project for testing purposes."
+    },
+    {
+      "id": "d5fea142-6321-48a2-a739-60248791f220",
+      "name": "gyhbkgdfchvn",
+      "owner": "1",
+      "date": "2025-06-07T01:44:01.696Z"
+    },
+    {
+      "id": "d5192cee-81f5-46a1-894d-b345e6f6da0b",
+      "name": "ghn",
+      "owner": "1",
+      "date": "2025-06-10T22:01:22.333Z",
+      "description": ""
+    },
+    {
+      "id": "a3707977-8bbe-42d6-8fcb-285cf43fdb4b",
+      "name": "Proyectofhsgvna PRUEBAAA",
+      "owner": "1",
+      "date": "2025-06-10T22:34:50.030Z",
+      "description": ""
+    },
+    {
+      "id": "f6d1d1e7-56d4-40f7-ae2c-8518da017458",
+      "name": "Proyectofhsgvna tghn",
+      "owner": "1",
+      "date": "2025-06-10T22:34:59.201Z",
+      "description": ""
+    }
+  ]
+}
