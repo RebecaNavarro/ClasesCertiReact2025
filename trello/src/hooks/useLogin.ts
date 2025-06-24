@@ -1,48 +1,63 @@
+import { useState, useReducer } from "react";
 import { useFormik } from "formik";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import { useTranslation } from "react-i18next";
 
 import { useAuthStore } from "../store/authStore";
 import { login as loginService } from "../services/authService";
-import { t } from "i18next";
-
-const loginSchema = yup.object({
-    email: yup
-        .string()
-        .email(t("login.valid_email"))
-        .required(t("login.required_email")),
-    password: yup
-        .string()
-        .min(6, t("login.password_min_length"))
-        .required(t("login.required_password")),
-});
+import { useAuthReducer } from "../contexts/AuthReducerContext";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../store/authStoreRedux";
+import { loginRedux } from "../slices/userSlice";
 
 export const useLogin = () => {
-    const navigate = useNavigate();
-    const [loginError, setLoginError] = useState(false);
+  const navigate = useNavigate();
+  const { dispatch: dispatchAuth } = useAuthReducer();
+  const { t } = useTranslation();
+  const [loginError, setLoginError] = useState(false);
+  const login = useAuthStore((state) => state.login);
+  const dispatch = useDispatch<AppDispatch>();
 
-    const login = useAuthStore((state) => state.login);
-    const formik = useFormik({
-        initialValues: {
-            email: "beca@gmail.com",
-            password: "123456",
-        },
-        validationSchema: loginSchema,
-        onSubmit: async (values) => {
-            const responseLogin = await loginService(values.email, values.password);
-            if (!responseLogin) {
-                setLoginError(true);
-                formik.resetForm();
-                return;
-            }
-            // loginContext(responseLogin);
-            login(responseLogin);
-            navigate("/app/dashboard", {
-                replace: true,
-            });
-        },
-    });
+  const loginSchema = yup.object({
+    email: yup
+      .string()
+      .email(t("login.invalidEmail"))
+      .required(t("login.requiredEmail")),
+    password: yup
+      .string()
+      .min(6, t("login.invalidPassword"))
+      .required(t("login.requiredPassword")),
+  });
 
-    return { formik, loginError, setLoginError };
+  const formik = useFormik({
+    initialValues: {
+      email: "admin@example.com",
+      password: "password123",
+    },
+    validationSchema: loginSchema,
+    onSubmit: async (values) => {
+      const responseLogin = await loginService(values.email, values.password);
+      if (!responseLogin) {
+        setLoginError(true);
+        formik.resetForm();
+        return;
+      }
+      dispatch(loginRedux(responseLogin));
+      dispatchAuth({
+        type: "LOGIN",
+        payload: { name: "Paul", last_name: "Landaeta" },
+      });
+      login(responseLogin);
+      navigate("/app/dashboard", {
+        replace: true,
+      });
+    },
+  });
+
+  return {
+    loginError,
+    setLoginError,
+    formik,
+  };
 };

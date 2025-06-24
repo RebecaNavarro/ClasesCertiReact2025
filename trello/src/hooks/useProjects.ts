@@ -1,24 +1,24 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { v4 as uuidv4 } from "uuid";
-import { t } from "i18next";
 
 import type { Project } from "../interfaces/projectInterface";
 import { useAuthStore } from "../store/authStore";
 import { useProjectsStore } from "../store/useProjectsStore";
-
+import { useAuthReducer } from "../contexts/AuthReducerContext";
 
 const projectSchema = Yup.object({
-  projectName: Yup.string().required(t("dashboard.required_project_name")),
+  projectName: Yup.string().required("El nombre del proyecto es requerido"),
 });
 
 export const useProjects = () => {
-
   const navigate = useNavigate();
-
   const user = useAuthStore((state) => state.user);
+  const { user: userFromReducer } = useAuthReducer();
+  
+  console.log('fromReducer', userFromReducer);
   const {
     fetchProjects,
     removeProject,
@@ -28,9 +28,9 @@ export const useProjects = () => {
   } = useProjectsStore((state) => state);
 
   const [openDialog, setOpenDialog] = useState(false);
-  const [project, setProject] = useState(null);
+  const [project, setProject] = useState<Project | null>(null);
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values: { projectName: string }) => {
     if (project?.name) {
       updateProject({
         ...project,
@@ -41,8 +41,8 @@ export const useProjects = () => {
         id: uuidv4(),
         name: values.projectName,
         owner: user.id,
+        description: values.projectName,
         date: new Date().toISOString(),
-        description: ""
       });
     }
 
@@ -50,7 +50,6 @@ export const useProjects = () => {
     setProject(null);
     setOpenDialog(false);
   };
-
   const formik = useFormik({
     initialValues: {
       projectName: "",
@@ -58,7 +57,6 @@ export const useProjects = () => {
     validationSchema: projectSchema,
     onSubmit: handleSubmit,
   });
-
   const openDialogHandler = () => {
     setOpenDialog(true);
   };
@@ -74,23 +72,23 @@ export const useProjects = () => {
     setOpenDialog(true);
   };
 
-  const goToProject = (projectId: string) => {
-    navigate(`/app/projects/${projectId}`);
-  };
-
   useEffect(() => {
     fetchProjects(user.id);
   }, [fetchProjects, user.id]);
 
+  const goToProject = (projectId: string) => {
+    navigate(`/app/projects/${projectId}`);
+  };
+
   return {
     removeProject,
     projects,
+    formik,
     openDialog,
     closeDialogHandler,
     openDialogHandler,
     goToProject,
-    formik,
     editProjectHandler,
-    project
+    project,
   };
 };

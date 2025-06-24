@@ -14,6 +14,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "../contexts/AuthContext";
+import { useAuthReducer } from "../contexts/AuthReducerContext";
 
 const drawerWidth = 240;
 
@@ -28,6 +29,8 @@ const Sidebar = ({
   handleDrawerToggle,
   isMobile,
 }: SidebarProps) => {
+
+  const { dispatch } = useAuthReducer();
 
   const { t } = useTranslation();
 
@@ -56,7 +59,10 @@ const Sidebar = ({
             component={Link}
             to="/Login"
             selected={location.pathname === "/login"}
-            onClick={logout}
+            onClick={() => {
+              logout();
+              dispatch({ type: 'LOGOUT' });
+            }}
           >
             <ListItemIcon>
               <Info />
